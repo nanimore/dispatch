@@ -2,22 +2,22 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.dispatch.mapper.JobRelMapper">
+<mapper namespace="com.dailycodebuffer.mq.mapper.InstanceMapper">
 
-    <resultMap id="BaseResultMap" type="com.example.dispatch.model.JobRel">
+    <resultMap id="BaseResultMap" type="com.dailycodebuffer.mq.model.Instance">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="relName" column="rel_name" jdbcType="VARCHAR"/>
-            <result property="relHead" column="rel_head" jdbcType="BIGINT"/>
-            <result property="relTail" column="rel_tail" jdbcType="BIGINT"/>
+            <result property="jobId" column="job_id" jdbcType="BIGINT"/>
+            <result property="batch" column="batch" jdbcType="VARCHAR"/>
+            <result property="message" column="message" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,rel_name,rel_head,
-        rel_tail,create_time,update_time,
-        is_deleted
+        id,job_id,batch,
+        message,status,create_time,
+        update_time,is_deleted
     </sql>
-
 </mapper>

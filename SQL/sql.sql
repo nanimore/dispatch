@@ -41,4 +41,20 @@ create table executor
     `is_deleted` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否删除，0-否，1-是',
 
     PRIMARY KEY (`id`) USING BTREE
+);
+
+DROP TABLE IF EXISTS instance;
+
+create table instance
+(
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `job_id` bigint(20) NOT NULL COMMENT '任务id',
+    `batch` VARCHAR(36) NOT NULL COMMENT '批次',
+    `message` varchar(255) NOT NULL COMMENT '消息',
+    `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '实例状态，0-未完成，1-完成',
+    `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '任务创建时间',
+    `update_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '任务更新时间',
+    `is_deleted` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否删除，0-否，1-是',
+
+    PRIMARY KEY (`id`) USING BTREE
 )

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.dispatch.mapper.JobRelMapper">
+<mapper namespace="com.dailycodebuffer.mq.mapper.JobRelMapper">
 
-    <resultMap id="BaseResultMap" type="com.example.dispatch.model.JobRel">
+    <resultMap id="BaseResultMap" type="com.dailycodebuffer.mq.model.JobRel">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="relName" column="rel_name" jdbcType="VARCHAR"/>
             <result property="relHead" column="rel_head" jdbcType="BIGINT"/>
