@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 /**
 * @author nanimo
@@ -38,6 +39,9 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job>
     @Resource
     @Lazy
     private JobRelService jobRelService;
+
+    @Resource
+    private DataSource dataSource;
 
     @Resource
     private InstanceService instanceService;
@@ -119,6 +123,60 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job>
 
     @Override
     public Boolean startJob(Long jobId) {
+
+        if (jobId == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        // a.判断任务是否存在
+        Job job = this.getById(jobId);
+        if (job == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "任务不存在");
+        }
+        // b.判断任务是否为根节点
+        QueryWrapper<JobRel> jobRelQW = new QueryWrapper<>();
+        jobRelQW.eq("rel_tail", jobId);
+        if (jobRelService.count(jobRelQW) > 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "任务不是根节点");
+        }
+        // c.判断是否有环
+
+
+        // 遍历任务图
+        ArrayList<Job> result = new ArrayList<>();
+        startJob4(jobId,  result);
+
+        // d.创建任务实例
+        String uuid = UUID.randomUUID().toString();
+        System.out.println(uuid);
+        for (Job job1 : result) {
+            Instance instance = new Instance();
+
+            instance.setJobId(job1.getId());
+            instance.setBatch(uuid);
+            instance.setMessage(job1.getJobDetail());
+            instance.setStatus(0);
+
+            instanceService.save(instance);
+        }
+
+        System.out.println(result);
+
+        // 投递消息
+        Job currentJob = this.getById(jobId);
+
+
+        CustomMessage message = new CustomMessage();
+        message.setJobId(currentJob.getId());
+        message.setBatch(uuid);
+        message.setMessage(currentJob.getJobDetail());
+
+        template.convertAndSend(MQConfig.EXCHANGE,
+                MQConfig.ROUTING_KEY, message);
+
+        return true;
+    }
+    public Boolean startJob5(Long jobId) {
         if (jobId == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
